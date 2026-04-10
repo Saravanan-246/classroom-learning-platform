@@ -26,15 +26,16 @@ export default function Home() {
     });
 
     setGlow(true);
-    setTimeout(() => setGlow(false), 1800);
+    setTimeout(() => setGlow(false), 1500);
   };
 
   return (
     <div className="bg-black text-white overflow-x-hidden">
 
-      {/* HERO */}
+      {/* 🔥 HERO */}
       <section className="relative w-full h-[80vh] md:h-screen overflow-hidden">
 
+        {/* 🔥 IMAGES */}
         {heroImages.map((img, i) => (
           <img
             key={i}
@@ -48,10 +49,22 @@ export default function Home() {
           />
         ))}
 
-        {/* LIGHT OVERLAY */}
-        <div className="absolute inset-0 bg-black/25 md:bg-gradient-to-r md:from-black/50 md:to-transparent"></div>
+        {/* 🔥 OVERLAY */}
+        <div className="absolute inset-0 bg-black/30 md:bg-gradient-to-r md:from-black/60 md:to-transparent"></div>
 
-        {/* CONTENT */}
+        {/* 🔥 SIDE ICONS (DESKTOP) */}
+        <div className="hidden md:flex flex-col gap-4 absolute left-6 top-1/2 -translate-y-1/2 z-20">
+          {subjectsData.slice(0, 4).map((sub, i) => (
+            <div
+              key={sub.id}
+              className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center text-xs font-semibold hover:bg-indigo-500/80 transition cursor-pointer"
+            >
+              {sub.name.charAt(0)}
+            </div>
+          ))}
+        </div>
+
+        {/* 🔥 CONTENT */}
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center z-10 px-4">
 
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight">
@@ -60,7 +73,7 @@ export default function Home() {
             <span className="text-indigo-400">ellam oothikum</span>
           </h1>
 
-          <p className="mt-4 text-white/85 text-sm md:text-lg">
+          <p className="mt-4 text-white/90 text-sm md:text-lg">
             Build focus. Learn faster.
           </p>
 
@@ -69,11 +82,10 @@ export default function Home() {
             className="
               mt-6 px-7 py-3
               rounded-xl font-semibold
-              bg-indigo-600/90 hover:bg-indigo-500
-              backdrop-blur-md
+              bg-indigo-600 hover:bg-indigo-500
               transition-all duration-300
               hover:scale-105 active:scale-95
-              shadow-[0_8px_30px_rgba(99,102,241,0.4)]
+              shadow-[0_0_25px_rgba(99,102,241,0.5)]
             "
           >
             Explore Subjects
@@ -81,22 +93,32 @@ export default function Home() {
 
         </div>
 
-        {/* SMOOTH FADE */}
+        {/* 🔥 MOBILE ICON SCROLL */}
+        <div className="md:hidden absolute bottom-20 left-0 w-full overflow-x-auto px-4 flex gap-3 z-20">
+          {subjectsData.map((sub) => (
+            <div
+              key={sub.id}
+              className="min-w-[80px] h-12 rounded-xl bg-white/10 flex items-center justify-center text-xs"
+            >
+              {sub.name}
+            </div>
+          ))}
+        </div>
+
+        {/* 🔥 FADE */}
         <div className="absolute bottom-0 w-full h-24 bg-gradient-to-b from-transparent to-black"></div>
 
       </section>
 
-      {/* SUBJECTS */}
+      {/* 📚 SUBJECTS */}
       <section
         ref={subjectsRef}
         className="relative -mt-16 max-w-7xl mx-auto px-4 pb-20"
       >
-
-        {/* 🔥 PREMIUM GLOW FRAME */}
         <div
           className={`
             transition-all duration-700 rounded-3xl p-[2px]
-            ${glow ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500" : "bg-transparent"}
+            ${glow ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500" : ""}
           `}
         >
           <div className="bg-black rounded-3xl p-4 md:p-6">
@@ -107,7 +129,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
       </section>
 
     </div>
