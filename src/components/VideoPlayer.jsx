@@ -9,16 +9,15 @@ export default function VideoPlayer({ resource }) {
     setIsMobile(/android|iphone|ipad|ipod|mobile/i.test(ua));
   }, []);
 
-  const isYouTube = resource.type === "youtube";
+  const isYouTube = resource?.type === "youtube";
 
-  // 🔥 Extract YouTube ID (safe)
+  // 🔥 ROBUST YOUTUBE ID EXTRACTOR
   const getYouTubeId = (url) => {
     try {
-      const parsed = new URL(url);
-      if (parsed.hostname === "youtu.be") {
-        return parsed.pathname.slice(1);
-      }
-      return parsed.searchParams.get("v");
+      const regExp =
+        /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
+      const match = url.match(regExp);
+      return match ? match[1] : null;
     } catch {
       return null;
     }
@@ -26,12 +25,12 @@ export default function VideoPlayer({ resource }) {
 
   const videoId = isYouTube ? getYouTubeId(resource.url) : null;
 
-  // 📱 Mobile → open app
+  // 📱 MOBILE → OPEN YOUTUBE APP
   const handleMobileOpen = () => {
     window.open(resource.url, "_blank", "noopener,noreferrer");
   };
 
-  // 🔗 Non YouTube link
+  // 🔗 NON-YOUTUBE RESOURCE
   if (!isYouTube) {
     return (
       <a
@@ -47,6 +46,21 @@ export default function VideoPlayer({ resource }) {
     );
   }
 
+  // ❌ FALLBACK IF VIDEO BLOCKED
+  if (!videoId) {
+    return (
+      <a
+        href={resource.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block rounded-xl bg-[#0f172a] border border-red-500/40 p-4 text-center"
+      >
+        <p className="text-sm text-red-400">⚠️ Cannot load video</p>
+        <p className="text-xs text-gray-400 mt-1">Open in YouTube →</p>
+      </a>
+    );
+  }
+
   // 📱 MOBILE VIEW
   if (isMobile) {
     return (
@@ -55,17 +69,11 @@ export default function VideoPlayer({ resource }) {
         className="cursor-pointer rounded-xl overflow-hidden bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 hover:shadow-md hover:border-red-500 transition"
       >
         <div className="relative aspect-video">
-          {videoId ? (
-            <img
-              src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-              alt={resource.title}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full text-gray-400">
-              No Preview
-            </div>
-          )}
+          <img
+            src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+            alt={resource.title}
+            className="w-full h-full object-cover"
+          />
 
           {/* ▶ Play Button */}
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
@@ -87,7 +95,7 @@ export default function VideoPlayer({ resource }) {
 
   // 💻 DESKTOP VIEW
   return (
-    <div className="rounded-xl overflow-hidden bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+    <div className="rounded-xl overflow-hidden bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition">
 
       <div className="relative aspect-video bg-black">
 
@@ -97,17 +105,15 @@ export default function VideoPlayer({ resource }) {
             onClick={() => setPlay(true)}
             className="absolute inset-0 cursor-pointer group"
           >
-            {videoId && (
-              <img
-                src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-                alt={resource.title}
-                className="w-full h-full object-cover"
-              />
-            )}
+            <img
+              src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+              alt={resource.title}
+              className="w-full h-full object-cover"
+            />
 
-            {/* ▶ Custom Play */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition">
-              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition">
+            {/* ▶ Play Button */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition">
+              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition">
                 <svg
                   className="w-8 h-8 text-white ml-1"
                   fill="currentColor"
@@ -120,11 +126,11 @@ export default function VideoPlayer({ resource }) {
           </div>
         )}
 
-        {/* ▶ AFTER CLICK */}
-        {play && videoId && (
+        {/* ▶ AFTER CLICK (FIXED EMBED) */}
+        {play && (
           <iframe
             className="w-full h-full"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
             title={resource.title}
             loading="lazy"
             allow="autoplay; encrypted-media; picture-in-picture"
@@ -133,10 +139,21 @@ export default function VideoPlayer({ resource }) {
         )}
       </div>
 
+      {/* TITLE */}
       <div className="p-3">
         <p className="text-sm font-medium text-slate-800 dark:text-white line-clamp-2">
           {resource.title}
         </p>
+
+        {/* 🔗 FALLBACK LINK */}
+        <a
+          href={resource.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-indigo-400 mt-1 inline-block hover:underline"
+        >
+          Open in YouTube →
+        </a>
       </div>
     </div>
   );
