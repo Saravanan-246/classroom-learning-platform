@@ -34,7 +34,7 @@ export const tamil = {
           title: "குறுந்தொகை",
           subGroups: [
             {
-              title: "முதல்திணை",
+              title: "முல்லைத்திணை",
               topics: [
                 {
                   id: "kurun-65",
