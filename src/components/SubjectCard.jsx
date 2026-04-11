@@ -95,7 +95,7 @@ export default function SubjectCard({ subject }) {
               bg-white/10 text-white/70
               px-2.5 py-0.5 rounded-full border border-white/10
             ">
-              🎥 {topicCount} Topics
+               {topicCount} Topics
             </span>
           )}
 
@@ -104,7 +104,7 @@ export default function SubjectCard({ subject }) {
               bg-indigo-500/20 text-indigo-300
               px-2.5 py-0.5 rounded-full border border-indigo-500/30
             ">
-              📘 {notesCount} Notes
+               {notesCount} Notes
             </span>
           )}
 
