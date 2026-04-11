@@ -5,13 +5,12 @@ export default function VideoPlayer({ resource }) {
   const [play, setPlay] = useState(false);
 
   useEffect(() => {
-    const ua = navigator.userAgent.toLowerCase();
-    setIsMobile(/android|iphone|ipad|ipod|mobile/i.test(ua));
+    const ua = navigator.userAgent || navigator.vendor;
+    setIsMobile(/android|iphone|ipad|ipod/i.test(ua.toLowerCase()));
   }, []);
 
   const isYouTube = resource?.type === "youtube";
 
-  // 🔥 ROBUST YOUTUBE ID EXTRACTOR
   const getYouTubeId = (url) => {
     try {
       const regExp =
@@ -25,81 +24,89 @@ export default function VideoPlayer({ resource }) {
 
   const videoId = isYouTube ? getYouTubeId(resource.url) : null;
 
-  // 📱 MOBILE → OPEN YOUTUBE APP
-  const handleMobileOpen = () => {
-    window.open(resource.url, "_blank", "noopener,noreferrer");
+  const openInApp = () => {
+    if (!resource?.url) return;
+
+    let appUrl = resource.url;
+
+    if (isYouTube && videoId) {
+      appUrl = `vnd.youtube://${videoId}`;
+    }
+
+    window.location.href = appUrl;
+
+    setTimeout(() => {
+      window.open(resource.url, "_blank", "noopener,noreferrer");
+    }, 800);
   };
 
-  // 🔗 NON-YOUTUBE RESOURCE
+  // 🔗 NON-YOUTUBE (COMPACT)
   if (!isYouTube) {
     return (
-      <a
-        href={resource.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:shadow-md hover:border-indigo-500 transition"
+      <div
+        onClick={openInApp}
+        className="
+          cursor-pointer rounded-xl px-3 py-2
+          bg-white/5 border border-white/10
+          hover:border-indigo-500/40
+          transition
+        "
       >
-        <p className="text-sm font-medium text-slate-800 dark:text-white line-clamp-2">
+        <p className="text-sm text-white truncate">
           {resource.title || "Open Resource"}
         </p>
-      </a>
+      </div>
     );
   }
 
-  // ❌ FALLBACK IF VIDEO BLOCKED
+  // ❌ FALLBACK
   if (!videoId) {
     return (
-      <a
-        href={resource.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block rounded-xl bg-[#0f172a] border border-red-500/40 p-4 text-center"
+      <div
+        onClick={openInApp}
+        className="
+          cursor-pointer rounded-xl py-6 text-center
+          bg-red-500/10 border border-red-500/40
+        "
       >
-        <p className="text-sm text-red-400">⚠️ Cannot load video</p>
-        <p className="text-xs text-gray-400 mt-1">Open in YouTube →</p>
-      </a>
+        <p className="text-sm text-red-400">⚠️ Cannot load</p>
+      </div>
     );
   }
 
-  // 📱 MOBILE VIEW
+  // 📱 MOBILE (NO EXTRA TEXT BLOCK)
   if (isMobile) {
     return (
       <div
-        onClick={handleMobileOpen}
-        className="cursor-pointer rounded-xl overflow-hidden bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 hover:shadow-md hover:border-red-500 transition"
+        onClick={openInApp}
+        className="
+          cursor-pointer rounded-xl overflow-hidden
+          border border-white/10
+        "
       >
         <div className="relative aspect-video">
           <img
             src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-            alt={resource.title}
+            alt=""
             className="w-full h-full object-cover"
           />
 
-          {/* ▶ Play Button */}
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white text-lg shadow-md">
+            <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white text-sm">
               ▶
             </div>
           </div>
-        </div>
-
-        <div className="p-3">
-          <p className="text-sm font-medium text-slate-800 dark:text-white line-clamp-1">
-            {resource.title}
-          </p>
-          <p className="text-xs text-red-500 mt-1">Open in YouTube</p>
         </div>
       </div>
     );
   }
 
-  // 💻 DESKTOP VIEW
+  // 💻 DESKTOP (ULTRA CLEAN)
   return (
-    <div className="rounded-xl overflow-hidden bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition">
+    <div className="rounded-xl overflow-hidden border border-white/10">
 
       <div className="relative aspect-video bg-black">
 
-        {/* 🎬 BEFORE PLAY */}
         {!play && (
           <div
             onClick={() => setPlay(true)}
@@ -107,54 +114,29 @@ export default function VideoPlayer({ resource }) {
           >
             <img
               src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-              alt={resource.title}
+              alt=""
               className="w-full h-full object-cover"
             />
 
-            {/* ▶ Play Button */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition">
-              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition">
-                <svg
-                  className="w-8 h-8 text-white ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition">
+                ▶
               </div>
             </div>
           </div>
         )}
 
-        {/* ▶ AFTER CLICK (FIXED EMBED) */}
         {play && (
           <iframe
             className="w-full h-full"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
-            title={resource.title}
-            loading="lazy"
-            allow="autoplay; encrypted-media; picture-in-picture"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+            title=""
+            allow="autoplay; encrypted-media"
             allowFullScreen
           />
         )}
       </div>
 
-      {/* TITLE */}
-      <div className="p-3">
-        <p className="text-sm font-medium text-slate-800 dark:text-white line-clamp-2">
-          {resource.title}
-        </p>
-
-        {/* 🔗 FALLBACK LINK */}
-        <a
-          href={resource.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-indigo-400 mt-1 inline-block hover:underline"
-        >
-          Open in YouTube →
-        </a>
-      </div>
     </div>
   );
 }

@@ -9,7 +9,6 @@ const heroImages = [hero1, hero2];
 
 export default function Home() {
   const [active, setActive] = useState(0);
-  const [glow, setGlow] = useState(false);
   const subjectsRef = useRef(null);
 
   useEffect(() => {
@@ -20,115 +19,102 @@ export default function Home() {
   }, []);
 
   const handleExplore = () => {
-    subjectsRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-    setGlow(true);
-    setTimeout(() => setGlow(false), 1500);
+    subjectsRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div className="bg-black text-white overflow-x-hidden">
+    <div className="bg-[#020617] text-white overflow-x-hidden">
 
       {/* 🔥 HERO */}
-      <section className="relative w-full h-[80vh] md:h-screen overflow-hidden">
+      <section className="relative w-full h-[85vh] md:h-screen overflow-hidden">
 
-        {/* 🔥 IMAGES */}
+        {/* IMAGES */}
         {heroImages.map((img, i) => (
           <img
             key={i}
             src={img}
             alt=""
             className={`
-              absolute inset-0 w-full h-full object-cover object-center
-              transition-all duration-[1800ms] ease-out
+              absolute inset-0 w-full h-full object-cover
+              transition-all duration-[1800ms]
               ${active === i ? "opacity-100 scale-100" : "opacity-0 scale-110"}
             `}
           />
         ))}
 
-        {/* 🔥 OVERLAY */}
-        <div className="absolute inset-0 bg-black/30 md:bg-gradient-to-r md:from-black/60 md:to-transparent"></div>
-
-        {/* 🔥 SIDE ICONS (DESKTOP) */}
-        <div className="hidden md:flex flex-col gap-4 absolute left-6 top-1/2 -translate-y-1/2 z-20">
-          {subjectsData.slice(0, 4).map((sub, i) => (
-            <div
-              key={sub.id}
-              className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center text-xs font-semibold hover:bg-indigo-500/80 transition cursor-pointer"
-            >
-              {sub.name.charAt(0)}
-            </div>
-          ))}
-        </div>
+        {/* ❌ REMOVED LEFT DARK */}
 
         {/* 🔥 CONTENT */}
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center z-10 px-4">
+        <div className="relative z-10 max-w-7xl mx-auto h-full flex items-center justify-center text-center px-6">
 
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight">
-            Confident ta irunga
-            <br />
-            <span className="text-indigo-400">ellam oothikum</span>
-          </h1>
+          <div className="max-w-xl">
 
-          <p className="mt-4 text-white/90 text-sm md:text-lg">
-            Build focus. Learn faster.
-          </p>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+              Confident ta irunga
+              <br />
+              <span className="text-indigo-400">ellam oothikum</span>
+            </h1>
 
-          <button
-            onClick={handleExplore}
-            className="
-              mt-6 px-7 py-3
-              rounded-xl font-semibold
-              bg-indigo-600 hover:bg-indigo-500
-              transition-all duration-300
-              hover:scale-105 active:scale-95
-              shadow-[0_0_25px_rgba(99,102,241,0.5)]
-            "
-          >
-            Explore Subjects
-          </button>
+            <p className="mt-4 text-white/80 text-sm md:text-lg">
+              Learn faster. Stay focused.
+            </p>
 
-        </div>
-
-        {/* 🔥 MOBILE ICON SCROLL */}
-        <div className="md:hidden absolute bottom-20 left-0 w-full overflow-x-auto px-4 flex gap-3 z-20">
-          {subjectsData.map((sub) => (
-            <div
-              key={sub.id}
-              className="min-w-[80px] h-12 rounded-xl bg-white/10 flex items-center justify-center text-xs"
+            <button
+              onClick={handleExplore}
+              className="
+                mt-6 px-6 py-3 rounded-lg
+                bg-indigo-600 hover:bg-indigo-500
+                transition-all
+                hover:scale-105 active:scale-95
+                shadow-[0_0_25px_rgba(99,102,241,0.6)]
+              "
             >
-              {sub.name}
-            </div>
-          ))}
+              Explore Subjects →
+            </button>
+
+          </div>
+
         </div>
 
-        {/* 🔥 FADE */}
-        <div className="absolute bottom-0 w-full h-24 bg-gradient-to-b from-transparent to-black"></div>
+        {/* 🔥 ONLY BOTTOM DARK */}
+        <div className="absolute bottom-0 w-full h-40 bg-gradient-to-b from-transparent to-[#020617]"></div>
 
       </section>
 
       {/* 📚 SUBJECTS */}
       <section
         ref={subjectsRef}
-        className="relative -mt-16 max-w-7xl mx-auto px-4 pb-20"
+        className="relative -mt-16 max-w-7xl mx-auto px-4 pb-24"
       >
-        <div
-          className={`
-            transition-all duration-700 rounded-3xl p-[2px]
-            ${glow ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500" : ""}
-          `}
-        >
-          <div className="bg-black rounded-3xl p-4 md:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {subjectsData.map((subject) => (
-                <SubjectCard key={subject.id} subject={subject} />
-              ))}
-            </div>
+
+        <div className="
+          rounded-3xl p-6 md:p-8
+          bg-gradient-to-b from-white/5 to-transparent
+          backdrop-blur-xl
+          border border-white/10
+          shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+        ">
+
+          {/* HEADER */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl md:text-2xl font-bold">
+              Subjects
+            </h2>
+
+            <span className="text-xs text-white/50">
+              {subjectsData.length} Available
+            </span>
           </div>
+
+          {/* GRID */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {subjectsData.map((subject) => (
+              <SubjectCard key={subject.id} subject={subject} />
+            ))}
+          </div>
+
         </div>
+
       </section>
 
     </div>

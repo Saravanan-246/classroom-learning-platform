@@ -1,4 +1,4 @@
 import { tamil } from "./tamil";
-import { cn } from "./cn";
+import { english } from "./english";
 
-export const subjectsData = [tamil, cn];
+export const subjectsData = [tamil, english];

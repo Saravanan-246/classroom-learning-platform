@@ -25,55 +25,92 @@ export default function SubjectDetail() {
   return (
     <div className="min-h-screen bg-[#020617] text-white overflow-x-hidden">
 
-      {/* 🔥 HERO */}
-      <div className="relative w-full h-[52vh] sm:h-[60vh] md:h-[72vh] overflow-hidden">
+      {/* 🔥 HERO (IMPROVED ONLY IMAGE + OVERLAY) */}
+     {/* 🔥 HERO */}
+<div className="relative w-full h-[65vh] sm:h-[70vh] md:h-[80vh] overflow-hidden">
 
-        {/* ✅ IMAGE FIX (MAIN) */}
-        <img
-          src={heroBg}
-          alt=""
-          className="
-            absolute inset-0 w-full h-full
-            object-contain md:object-cover
-            object-top md:object-top
-            md:scale-[0.92]
-            transition-all duration-700
-          "
-        />
+  {/* IMAGE */}
+  <img
+    src={heroBg}
+    alt=""
+    className="
+      absolute inset-0 w-full h-full
+      object-contain md:object-cover
+      object-center md:object-top
+      transition-all duration-700
+    "
+  />
 
-        {/* ✅ LIGHT OVERLAY */}
-        <div className="absolute inset-0 bg-black/30"></div>
+  {/* 🔥 LIGHT OVERLAY */}
+  <div className="absolute inset-0 bg-black/20 md:bg-black/30"></div>
 
-        {/* ✅ SIDE FADE (ONLY DESKTOP) */}
-        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#020617] via-transparent to-[#020617] opacity-50"></div>
+  {/* 🔥 TOP GRADIENT (FOR TEXT VISIBILITY) */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent"></div>
 
-        {/* ✅ CONTENT */}
-        <div className="relative z-10 max-w-6xl mx-auto px-6 pt-16">
+  {/* SIDE FADE */}
+  <div className="
+    hidden md:block absolute inset-0
+    bg-gradient-to-r
+    from-[#020617] via-transparent to-transparent
+    opacity-70
+  "></div>
 
-          <Link
-            to="/"
-            className="text-white/70 hover:text-white text-sm transition"
-          >
-            ← Back
-          </Link>
+  {/* BOTTOM FADE */}
+  <div className="
+    absolute bottom-0 w-full h-28
+    bg-gradient-to-b from-transparent to-[#020617]
+  "></div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mt-4 leading-tight">
-            {subject.name}
-          </h1>
+  {/* 🔥 CONTENT (TOP-LEFT FIXED) */}
+  <div className="
+    relative z-10
+    max-w-6xl mx-auto
+    px-5 sm:px-6
+    pt-6 sm:pt-10 md:pt-14
+  ">
 
-          <p className="mt-3 text-white/90 max-w-xl text-sm sm:text-base">
-            {subject.description}
-          </p>
+    <Link
+  to="/"
+  className="
+    inline-flex items-center gap-2
+    px-4 py-2
+    rounded-lg
+    bg-white/10 border border-white/20
+    backdrop-blur-md
+    text-white text-sm font-medium
+    hover:bg-indigo-600 hover:border-indigo-500
+    transition-all duration-200
+    group
+  "
+>
+  <span className="group-hover:-translate-x-1 transition">
+    ←
+  </span>
+  Back
+</Link>
+    {/* TITLE */}
+    <h1 className="
+      font-extrabold leading-tight
+      text-3xl sm:text-4xl md:text-5xl
+    ">
+      {subject.name}
+    </h1>
 
-        </div>
+    {/* DESCRIPTION */}
+    <p className="
+      mt-2
+      text-white/90
+      max-w-md
+      text-sm sm:text-base
+    ">
+      {subject.desc || subject.description}
+    </p>
 
-        {/* ✅ BOTTOM FADE */}
-        <div className="absolute bottom-0 w-full h-28 bg-gradient-to-b from-transparent to-[#020617]"></div>
+  </div>
 
-      </div>
-
-      {/* 📚 CONTENT */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-16 pb-20 relative z-10">
+</div>
+      {/* 📚 CONTENT (UNCHANGED) */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-0 md:-mt-12 pb-20 relative z-10">
 
         <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-5 md:p-6 border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
 
@@ -109,7 +146,7 @@ export default function SubjectDetail() {
                     </button>
 
                     {/* GROUP CONTENT */}
-                    <div className={`overflow-hidden transition-all duration-500 ${isOpen ? "max-h-[2000px] mt-4" : "max-h-0"}`}>
+                    <div className={`${isOpen ? "mt-4" : "hidden"}`}>
 
                       {group.subGroups ? (
                         group.subGroups.map((sub, sIndex) => {
@@ -134,7 +171,7 @@ export default function SubjectDetail() {
                               </button>
 
                               {/* SUB CONTENT */}
-                              <div className={`overflow-hidden transition-all ${subOpen ? "max-h-[1000px] mt-3" : "max-h-0"}`}>
+                              <div className={`${subOpen ? "mt-3" : "hidden"}`}>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ml-2 sm:ml-4">
                                   {sub.topics.map((topic) => (
                                     <TopicCard
