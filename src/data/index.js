@@ -1,4 +1,4 @@
-import { tamil } from "./tamil";
+// Exam over import { tamil } from "./tamil";
 import { english } from "./english";
 
-export const subjectsData = [tamil, english];
+export const subjectsData = [english];
