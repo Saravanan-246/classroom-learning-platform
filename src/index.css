@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ================================
-   🌍 BASE (CLEAN + CONSISTENT)
+   🌍 BASE (CLEAN + SMOOTH)
 ================================ */
 html {
   scroll-behavior: smooth;
@@ -16,6 +16,9 @@ body {
 
   background: #020617;
   color: #f8fafc;
+
+  /* 🔥 PERFORMANCE BOOST */
+  text-rendering: optimizeLegibility;
 }
 
 /* ================================
@@ -27,7 +30,7 @@ body {
 }
 
 /* ================================
-   📜 SCROLLBAR (SUBTLE + PREMIUM)
+   📜 SCROLLBAR (PREMIUM)
 ================================ */
 
 /* Chrome / Edge / Safari */
@@ -42,6 +45,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgba(100, 116, 139, 0.35);
   border-radius: 999px;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -55,24 +59,25 @@ body {
 }
 
 /* ================================
-   ✨ UTILITIES (ONLY IMPORTANT)
+   ✨ UTILITIES
 ================================ */
 
-/* Glass card */
+/* Glass */
 .glass {
   background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 1.5rem;
 }
 
-/* Subtle focus ring (better UX) */
+/* Focus ring */
 .focus-ring:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
 }
 
-/* Text clamp */
+/* Clamp */
 .line-clamp-1 {
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -85,4 +90,55 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ================================
+   ❄️ SNOW (GLOBAL ANIMATION)
+================================ */
+@keyframes snowWind {
+  0% {
+    transform: translateX(0) translateY(0);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateX(50vw) translateY(10vh);
+  }
+
+  100% {
+    transform: translateX(120vw) translateY(25vh);
+    opacity: 0;
+  }
+}
+
+/* ================================
+   🌈 GRADIENT TEXT FLOW
+================================ */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradientFlow 4s linear infinite;
+}
+
+/* ================================
+   ⚡ PERFORMANCE HELPERS
+================================ */
+
+/* Smooth GPU animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Prevent lag on heavy animations */
+.no-lag {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
