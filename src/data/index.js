@@ -1,4 +1,7 @@
-// Exam over import { tamil } from "./tamil";
 import { english } from "./english";
+import cn from "./cn"; // ✅ auto loads cn/index.js
 
-export const subjectsData = [english];
+export const subjectsData = [
+  english,
+  cn
+];

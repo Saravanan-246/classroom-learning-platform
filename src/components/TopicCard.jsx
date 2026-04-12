@@ -1,34 +1,50 @@
 import { Link } from "react-router-dom";
 
 export default function TopicCard({ topic, subjectId }) {
-  const resourcesCount = topic.resources?.length || 0;
+  const resourcesCount = topic?.resources?.length ?? 0;
+  const topicId = topic?.id ?? "";
+
+  const targetPath =
+    subjectId === "cn"
+      ? `/learn/${subjectId}/${topicId}`
+      : `/topic/${topicId}`;
+
+  if (!topicId) return null;
 
   return (
-    <Link
-      to={`/topic/${topic.id}`}
-      state={{ subjectId }}
-      className="group block h-full"
-    >
+    <Link to={targetPath} className="group block h-full">
       <div
         className="
           relative h-full overflow-hidden
-          rounded-2xl p-5
-          bg-gradient-to-b from-white/5 to-white/[0.02]
-          backdrop-blur-xl
+          rounded-2xl p-5 pl-6
+
+          bg-gradient-to-b from-[#0b1220] to-[#020617]
           border border-white/10
+
           transition-all duration-300
           hover:-translate-y-1.5
-          hover:border-indigo-500/40
-          hover:shadow-[0_12px_35px_rgba(0,0,0,0.7)]
+          hover:border-blue-500/40
+          hover:shadow-[0_18px_45px_rgba(0,0,0,0.85)]
         "
       >
 
-        {/* 🔥 GLOW */}
+        {/* 🔥 LEFT ACCENT BAR */}
+        <div className="
+          absolute left-0 top-0 h-full w-[3px]
+          bg-gradient-to-b from-blue-500 to-blue-500/10
+          opacity-80
+
+          group-hover:w-[4px]
+          group-hover:opacity-100
+          transition-all duration-300
+        " />
+
+        {/* 🔥 SOFT GLOW */}
         <div className="
           absolute inset-0 opacity-0 group-hover:opacity-100
           transition duration-500
-          bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent
-        "></div>
+          bg-gradient-to-br from-blue-500/20 via-transparent to-transparent
+        " />
 
         {/* 🔝 TOP */}
         <div className="relative flex items-center justify-between mb-4">
@@ -37,16 +53,13 @@ export default function TopicCard({ topic, subjectId }) {
           <div className="
             w-10 h-10 flex items-center justify-center
             rounded-lg
-            bg-indigo-500/10 text-indigo-400
-            group-hover:bg-indigo-600 group-hover:text-white
+
+            bg-blue-500/10 text-blue-400
+            group-hover:bg-blue-600 group-hover:text-white
+
             transition-all duration-300
           ">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor">
               <path
                 strokeWidth="2"
                 strokeLinecap="round"
@@ -56,52 +69,67 @@ export default function TopicCard({ topic, subjectId }) {
             </svg>
           </div>
 
-          {/* 🔥 COUNT */}
+          {/* BADGE */}
           <span className="
             text-[11px] font-medium
-            bg-white/10 text-white/70
-            px-2.5 py-1 rounded-full
+            bg-white/5 text-white/70
+            px-3 py-1 rounded-full
             border border-white/10
-            group-hover:bg-indigo-500/20 group-hover:text-indigo-300
+            backdrop-blur-sm
+
+            group-hover:bg-blue-500/20
+            group-hover:text-blue-300
             transition
           ">
-            {resourcesCount} {resourcesCount === 1 ? "Video" : "Videos"}
+            {resourcesCount > 0
+              ? `${resourcesCount} ${resourcesCount === 1 ? "Video" : "Videos"}`
+              : "Learn"}
           </span>
+
         </div>
 
         {/* 🔥 TITLE */}
         <h3 className="
-          relative text-base font-semibold
-          text-white leading-snug
-          group-hover:text-indigo-400
-          transition
+          relative text-[15px] font-semibold
+          text-blue-400
+          group-hover:text-blue-300
+          transition leading-snug line-clamp-2
         ">
-          {topic.title}
+          {topic?.title || "Untitled Topic"}
         </h3>
 
         {/* 🔥 SUBTEXT */}
         <p className="
-          relative text-sm text-white/50 mt-1
+          text-xs text-slate-400 mt-2
+          leading-relaxed
         ">
-          Learn with video explanations
+          Learn concept • examples • tips
         </p>
 
         {/* 🔥 CTA */}
-        <div className="
-          mt-4 flex items-center gap-2
-          text-xs text-indigo-400
-          opacity-0 group-hover:opacity-100
-          translate-y-1 group-hover:translate-y-0
-          transition-all duration-300
-        ">
-          Start Learning →
+        <div className="mt-5 flex items-center justify-between text-xs">
+
+          <span className="
+            text-blue-400 group-hover:text-blue-300
+            transition font-medium
+          ">
+            Open →
+          </span>
+
+          {/* 🔥 DOT ANIMATION */}
+          <span className="
+            h-2 w-2 rounded-full bg-blue-500
+            opacity-60 group-hover:opacity-100
+            group-hover:scale-125 transition
+          " />
+
         </div>
 
         {/* 🔥 DIVIDER */}
         <div className="
-          mt-4 h-[1px] w-full
+          mt-5 h-[1px] w-full
           bg-gradient-to-r from-transparent via-white/10 to-transparent
-        "></div>
+        " />
 
       </div>
     </Link>

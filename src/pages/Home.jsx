@@ -13,8 +13,9 @@ export default function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActive((p) => (p === 0 ? 1 : 0));
+      setActive((prev) => (prev === 0 ? 1 : 0));
     }, 5000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -31,7 +32,7 @@ export default function Home() {
         {/* IMAGES */}
         {heroImages.map((img, i) => (
           <img
-            key={i}
+            key={`hero-${i}`}   // ✅ FIXED (stable key)
             src={img}
             alt=""
             className={`
@@ -42,11 +43,8 @@ export default function Home() {
           />
         ))}
 
-        {/* ❌ REMOVED LEFT DARK */}
-
         {/* 🔥 CONTENT */}
         <div className="relative z-10 max-w-7xl mx-auto h-full flex items-center justify-center text-center px-6">
-
           <div className="max-w-xl">
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
@@ -73,10 +71,9 @@ export default function Home() {
             </button>
 
           </div>
-
         </div>
 
-        {/* 🔥 ONLY BOTTOM DARK */}
+        {/* 🔥 BOTTOM DARK */}
         <div className="absolute bottom-0 w-full h-40 bg-gradient-to-b from-transparent to-[#020617]"></div>
 
       </section>
@@ -86,7 +83,6 @@ export default function Home() {
         ref={subjectsRef}
         className="relative -mt-16 max-w-7xl mx-auto px-4 pb-24"
       >
-
         <div className="
           rounded-3xl p-6 md:p-8
           bg-gradient-to-b from-white/5 to-transparent
@@ -102,19 +98,21 @@ export default function Home() {
             </h2>
 
             <span className="text-xs text-white/50">
-              {subjectsData.length} Available
+              {subjectsData?.length || 0} Available
             </span>
           </div>
 
           {/* GRID */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {subjectsData.map((subject) => (
-              <SubjectCard key={subject.id} subject={subject} />
+            {subjectsData?.map((subject, index) => (
+              <SubjectCard
+                key={subject?.id ?? `subject-${index}`} // ✅ FINAL SAFE KEY
+                subject={subject}
+              />
             ))}
           </div>
 
         </div>
-
       </section>
 
     </div>
