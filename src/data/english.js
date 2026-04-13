@@ -1,149 +1,123 @@
 export const english = {
   id: "english",
   name: "English",
-  description: "Literature, Grammar, and Communication Skills",
-
   sections: [
     {
-      id: "literature",
-      title: "Literature",
-      groups: [
+      id: "unit1",
+      title: "Unit 1 – Listening",
+      topics: [
         {
-          title: "Poems & Prose",
-          topics: [
-            {
-              id: "frost",
-              title: "Stopping by Woods on a Snowy Evening – Robert Frost",
-              resources: [
-                { id: "r1", type: "youtube", url: "https://www.youtube.com/watch?v=ednUu7dTn-Q" },
-              ],
-            },
-            {
-              id: "tagore",
-              title: "Where the Mind is Without Fear – Rabindranath Tagore",
-              resources: [
-                { id: "r2", type: "youtube", url: "https://youtu.be/N3tLL0s9Qik" },
-              ],
-            },
-            {
-              id: "magi",
-              title: "The Gift of the Magi – O. Henry",
-              resources: [
-                { id: "r3", type: "youtube", url: "https://youtu.be/0fZFStKq_sM" },
-              ],
-            },
-            {
-              id: "queen",
-              title: "The Queen’s Rival – Sarojini Naidu",
-              resources: [
-                { id: "r4", type: "youtube", url: "https://youtu.be/R2c_HBIE92s" },
-              ],
-            },
-            {
-              id: "astrologer",
-              title: "An Astrologer’s Day – R.K. Narayan",
-              resources: [
-                { id: "r5", type: "youtube", url: "https://www.youtube.com/watch?v=BvuNLyEoxtU" },
-              ],
-            },
-            {
-              id: "cop",
-              title: "The Cop and the Anthem – O. Henry",
-              resources: [
-                { id: "r6", type: "youtube", url: "https://youtu.be/JW2B6ui4ZL8" },
-              ],
-            },
-            {
-              id: "dollar",
-              title: "My Lost Dollar – Stephen Leacock",
-              resources: [
-                { id: "r7", type: "youtube", url: "https://youtu.be/0dSNkBBAjEU" },
-              ],
-            },
-            {
-              id: "please",
-              title: "On Saying Please – A.G. Gardiner",
-              resources: [
-                { id: "r8", type: "youtube", url: "https://youtu.be/AYnUP8WRTDI" },
-              ],
-            },
-            {
-              id: "eyes",
-              title: "The Eyes Are Not Here – Ruskin Bond",
-              resources: [
-                { id: "r9", type: "youtube", url: "https://youtu.be/W3_005ZEVhM" },
-              ],
-            },
-          ],
+          id: "pushpa",
+          title: "Goodbye Party for Miss Pushpa T.S. – Nissim Ezekiel",
+          url: "https://youtu.be/2FkoOKTImKc?si=Txq-cLPemKsGTplB",
+        },
+        {
+          id: "lawrence",
+          title: "Last Lessons of the Afternoon – D.H. Lawrence",
+          url: "https://youtu.be/udcc2lANqEE?si=NS9BMhOiShj3kOJu",
+        },
+        {
+          id: "tone",
+          title: "Tone & Emotion identification + Vivid language & pacing",
+          url: "https://chatgpt.com/s/t_69dcece60d288191a487499450684ec7",
+        },
+        {
+          id: "kalam",
+          title: "Dr. APJ Abdul Kalam – EU Speech",
+          url: "https://chatgpt.com/s/t_69dced0cecbc8191b008e91dc13fee90",
+        },
+        {
+          id: "grammar1",
+          title: "Present Simple & Present Continuous",
+          url: "https://chatgpt.com/s/t_69dced2837808191b9150c7c45233b90",
         },
       ],
     },
 
     {
-      id: "grammar",
-      title: "Grammar",
-      groups: [
+      id: "unit2",
+      title: "Unit 2 – Speaking",
+      topics: [
         {
-          title: "Core Grammar",
-          topics: [
-            {
-              id: "grammar-gpt",
-              title: "Grammar Full Notes (Phrasal Verbs, Idioms, Conditionals, Modals, Word Formation, Morphology, Homonyms, Homophones)",
-              resources: [
-                {
-                  id: "g1",
-                  type: "link",
-                  url: "https://chatgpt.com/s/t_69da21f4c3b48191a5b1b0ab0f13b653",
-                },
-              ],
-            },
-          ],
+          id: "earnest",
+          title: "The Importance of Being Earnest – Oscar Wilde",
+          url: "https://youtu.be/ey8InlrVWOM?si=pPpmt3c66Z_kXMu4",
+        },
+        {
+          id: "persuasive",
+          title: "Persuasive Speech",
+          url: "https://chatgpt.com/s/t_69dced5a0d7881918b421481c199b1af",
+        },
+        {
+          id: "grammar2",
+          title: "Present Perfect & Simple Past",
+          url: "https://chatgpt.com/s/t_69dcede64c2481919b9b7193fb2d24d2",
         },
       ],
     },
 
     {
-      id: "skills",
-      title: "Communication Skills",
-      groups: [
+      id: "unit3",
+      title: "Unit 3 – Reading",
+      topics: [
         {
-          title: "Speaking, Reading & Writing",
-          topics: [
-            {
-              id: "skills-gpt",
-              title: "Communication Skills (Speaking, Reading, Writing)",
-              resources: [
-                {
-                  id: "g2",
-                  type: "link",
-                  url: "https://chatgpt.com/s/t_69da2260c4148191aec935b5bdd23669",
-                },
-              ],
-            },
-          ],
+          id: "feast",
+          title: "The Remains of the Feast – Gita Hariharan",
+          url: "https://youtu.be/Pi5IwLD9MB4?si=9luBUI8NjUdQ0lsT",
+        },
+        {
+          id: "thankyou",
+          title: "Thank You Ma’am – Langston Hughes",
+          url: "https://youtu.be/JYsbLJi7sUc?si=L0xTZhWmVsV2zrps",
+        },
+        {
+          id: "context",
+          title: "Societal & cultural context reading",
+          url: "https://chatgpt.com/s/t_69dcee0ab5fc8191bfd567ff7d0f08ed",
+        },
+        {
+          id: "grammar3",
+          title: "Present Perfect Continuous, Present Perfect, Past Perfect, Simple Past",
+          url: "https://chatgpt.com/s/t_69dcee2ae40881918ad0e96327fc8c2a",
+        },
+      ],
+    },
+
+    {
+      id: "unit4",
+      title: "Unit 4 – Writing Skills",
+      topics: [
+        {
+          id: "elephant",
+          title: "Shooting an Elephant – George Orwell",
+          url: "https://youtu.be/0wG_5veIgGQ?si=J9W2YqXqF9YQSnXA",
+        },
+        {
+          id: "auto",
+          title: "Autobiographical writing",
+          url: "https://chatgpt.com/s/t_69dcee4e2e04819197257c1e047a04bc",
+        },
+        {
+          id: "grammar4",
+          title: "Past Continuous, Simple Past, Past Perfect Continuous, Past Perfect",
+          url: "https://chatgpt.com/s/t_69dcee88e6f481918e854c17e3a7e469",
         },
       ],
     },
 
     {
       id: "unit5",
-      title: "Unit 5 – Interpersonal Skills",
-      groups: [
+      title: "Unit 5 – Soft Skills",
+      topics: [
         {
-          title: "Interpersonal Skills",
-          topics: [
-            {
-              id: "unit5-gpt",
-              title: "Unit 5 Full Notes (Interpersonal Skills + SWOT)",
-              resources: [
-                {
-                  id: "g3",
-                  type: "link",
-                  url: "https://chatgpt.com/s/t_69da23af42f481919743878eaee036e7",
-                },
-              ],
-            },
-          ],
+          id: "jobs",
+          title: "Steve Jobs – 2005 Stanford Speech",
+          url: "https://chatgpt.com/s/t_69dceeaba1588191aa120678b2958648",
+        },
+        {
+          id: "cv",
+          title: "CV Preparation (Canva)",
+          url: "https://chatgpt.com/s/t_69dcef0c9ad8819189c4b37ade51ba06",
         },
       ],
     },
