@@ -95,11 +95,14 @@ export default function TopicView() {
           <div className={`grid grid-cols-1 ${subject.id === "or" ? "lg:grid-cols-3" : "lg:grid-cols-2"} gap-8`}>
 
             {/* VIDEO */}
-            <div className="lg:col-span-2 space-y-6">
-              {resources.map((res) => (
-                <VideoPlayer key={res.id} resource={res} />
-              ))}
-            </div>
+          <div className="lg:col-span-2 space-y-6">
+  {/* Only show video if NOT OR */}
+  {subject.id !== "or" &&
+    resources.map((res) => (
+      <VideoPlayer key={res.id} resource={res} />
+    ))
+  }
+</div>
 
             {/* PLAYLIST PANEL (ONLY OR) */}
             {subject.id === "or" && (
