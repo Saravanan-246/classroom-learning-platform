@@ -11,6 +11,9 @@ export default function VideoPlayer({ resource }) {
 
   const isYouTube = resource?.type === "youtube";
 
+  // ✅ Detect playlist
+  const isPlaylist = resource?.url?.includes("list=");
+
   const getYouTubeId = (url) => {
     try {
       const regExp =
@@ -22,14 +25,23 @@ export default function VideoPlayer({ resource }) {
     }
   };
 
+  const getPlaylistId = (url) => {
+    try {
+      return url.split("list=")[1]?.split("&")[0];
+    } catch {
+      return null;
+    }
+  };
+
   const videoId = isYouTube ? getYouTubeId(resource.url) : null;
+  const playlistId = isPlaylist ? getPlaylistId(resource.url) : null;
 
   const openInApp = () => {
     if (!resource?.url) return;
 
     let appUrl = resource.url;
 
-    if (isYouTube && videoId) {
+    if (isYouTube && videoId && !isPlaylist) {
       appUrl = `vnd.youtube://${videoId}`;
     }
 
@@ -40,7 +52,7 @@ export default function VideoPlayer({ resource }) {
     }, 800);
   };
 
-  // 🔗 NON-YOUTUBE (COMPACT)
+  // 🔗 NON-YOUTUBE (same as before)
   if (!isYouTube) {
     return (
       <div
@@ -60,7 +72,7 @@ export default function VideoPlayer({ resource }) {
   }
 
   // ❌ FALLBACK
-  if (!videoId) {
+  if (!videoId && !isPlaylist) {
     return (
       <div
         onClick={openInApp}
@@ -74,7 +86,7 @@ export default function VideoPlayer({ resource }) {
     );
   }
 
-  // 📱 MOBILE (NO EXTRA TEXT BLOCK)
+  // 📱 MOBILE
   if (isMobile) {
     return (
       <div
@@ -86,7 +98,11 @@ export default function VideoPlayer({ resource }) {
       >
         <div className="relative aspect-video">
           <img
-            src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+            src={
+              videoId
+                ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                : "https://img.youtube.com/vi/teukpjpE9sA/hqdefault.jpg"
+            }
             alt=""
             className="w-full h-full object-cover"
           />
@@ -101,10 +117,9 @@ export default function VideoPlayer({ resource }) {
     );
   }
 
-  // 💻 DESKTOP (ULTRA CLEAN)
+  // 💻 DESKTOP
   return (
     <div className="rounded-xl overflow-hidden border border-white/10">
-
       <div className="relative aspect-video bg-black">
 
         {!play && (
@@ -113,7 +128,11 @@ export default function VideoPlayer({ resource }) {
             className="absolute inset-0 cursor-pointer group"
           >
             <img
-              src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+              src={
+                videoId
+                  ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                  : "https://img.youtube.com/vi/teukpjpE9sA/hqdefault.jpg"
+              }
               alt=""
               className="w-full h-full object-cover"
             />
@@ -129,14 +148,17 @@ export default function VideoPlayer({ resource }) {
         {play && (
           <iframe
             className="w-full h-full"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-            title=""
+            src={
+              isPlaylist
+                ? `https://www.youtube.com/embed/videoseries?list=${playlistId}`
+                : `https://www.youtube.com/embed/${videoId}?autoplay=1`
+            }
+            title="YouTube player"
             allow="autoplay; encrypted-media"
             allowFullScreen
           />
         )}
       </div>
-
     </div>
   );
 }
