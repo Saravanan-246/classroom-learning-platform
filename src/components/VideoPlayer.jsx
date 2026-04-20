@@ -10,9 +10,10 @@ export default function VideoPlayer({ resource }) {
   }, []);
 
   const isYouTube = resource?.type === "youtube";
+  const url = resource?.url || "";
 
-  // ✅ Detect playlist
-  const isPlaylist = resource?.url?.includes("list=");
+  // Detect playlist
+  const isPlaylist = url.includes("list=");
 
   const getYouTubeId = (url) => {
     try {
@@ -33,13 +34,18 @@ export default function VideoPlayer({ resource }) {
     }
   };
 
-  const videoId = isYouTube ? getYouTubeId(resource.url) : null;
-  const playlistId = isPlaylist ? getPlaylistId(resource.url) : null;
+  const videoId = isYouTube ? getYouTubeId(url) : null;
+  const playlistId = isPlaylist ? getPlaylistId(url) : null;
+
+  // ✅ Safe thumbnail
+  const thumbnail = videoId
+    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+    : "https://via.placeholder.com/480x270?text=Video";
 
   const openInApp = () => {
-    if (!resource?.url) return;
+    if (!url) return;
 
-    let appUrl = resource.url;
+    let appUrl = url;
 
     if (isYouTube && videoId && !isPlaylist) {
       appUrl = `vnd.youtube://${videoId}`;
@@ -48,21 +54,16 @@ export default function VideoPlayer({ resource }) {
     window.location.href = appUrl;
 
     setTimeout(() => {
-      window.open(resource.url, "_blank", "noopener,noreferrer");
+      window.open(url, "_blank", "noopener,noreferrer");
     }, 800);
   };
 
-  // 🔗 NON-YOUTUBE (same as before)
+  // NON-YOUTUBE
   if (!isYouTube) {
     return (
       <div
         onClick={openInApp}
-        className="
-          cursor-pointer rounded-xl px-3 py-2
-          bg-white/5 border border-white/10
-          hover:border-indigo-500/40
-          transition
-        "
+        className="cursor-pointer rounded-xl px-3 py-2 bg-white/5 border border-white/10 hover:border-indigo-500/40 transition"
       >
         <p className="text-sm text-white truncate">
           {resource.title || "Open Resource"}
@@ -71,44 +72,34 @@ export default function VideoPlayer({ resource }) {
     );
   }
 
-  // ❌ FALLBACK
+  // FALLBACK
   if (!videoId && !isPlaylist) {
     return (
       <div
         onClick={openInApp}
-        className="
-          cursor-pointer rounded-xl py-6 text-center
-          bg-red-500/10 border border-red-500/40
-        "
+        className="cursor-pointer rounded-xl py-6 text-center bg-red-500/10 border border-red-500/40"
       >
-        <p className="text-sm text-red-400">⚠️ Cannot load</p>
+        <p className="text-sm text-red-400">Cannot load video</p>
       </div>
     );
   }
 
-  // 📱 MOBILE
+  // MOBILE
   if (isMobile) {
     return (
       <div
         onClick={openInApp}
-        className="
-          cursor-pointer rounded-xl overflow-hidden
-          border border-white/10
-        "
+        className="cursor-pointer rounded-xl overflow-hidden border border-white/10"
       >
         <div className="relative aspect-video">
           <img
-            src={
-              videoId
-                ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-                : "https://img.youtube.com/vi/teukpjpE9sA/hqdefault.jpg"
-            }
-            alt=""
+            src={thumbnail}
+            alt="video"
             className="w-full h-full object-cover"
           />
 
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white text-sm">
+            <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white">
               ▶
             </div>
           </div>
@@ -117,7 +108,7 @@ export default function VideoPlayer({ resource }) {
     );
   }
 
-  // 💻 DESKTOP
+  // DESKTOP
   return (
     <div className="rounded-xl overflow-hidden border border-white/10">
       <div className="relative aspect-video bg-black">
@@ -128,12 +119,8 @@ export default function VideoPlayer({ resource }) {
             className="absolute inset-0 cursor-pointer group"
           >
             <img
-              src={
-                videoId
-                  ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-                  : "https://img.youtube.com/vi/teukpjpE9sA/hqdefault.jpg"
-              }
-              alt=""
+              src={thumbnail}
+              alt="video"
               className="w-full h-full object-cover"
             />
 
@@ -149,7 +136,7 @@ export default function VideoPlayer({ resource }) {
           <iframe
             className="w-full h-full"
             src={
-              isPlaylist
+              isPlaylist && playlistId
                 ? `https://www.youtube.com/embed/videoseries?list=${playlistId}`
                 : `https://www.youtube.com/embed/${videoId}?autoplay=1`
             }
