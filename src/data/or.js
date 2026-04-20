@@ -18,7 +18,7 @@ const or = {
                 {
                   id: "or1",
                   type: "youtube",
-                  url: "https://www.youtube.com/watch?v=teukpjpE9sA&list=PL5OU27lGzKQAg_NfT_4V7MG6NE6A4KfVO"
+                  url: "https://youtube.com/playlist?list=PL5OU27lGzKQAg_NfT_4V7MG6NE6A4KfVO&si=YdJS4ndpANtjyISR"
                 }
               ]
             }
