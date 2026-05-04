@@ -2,38 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===============================
-   🌐 FONT IMPORT (PRO LEVEL)
-================================ */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
-/* ===============================
-   🌍 BASE
-================================ */
 html {
   scroll-behavior: smooth;
 }
 
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   background: #020617;
   color: #e2e8f0;
-
   text-rendering: optimizeLegibility;
   line-height: 1.65;
   letter-spacing: -0.01em;
-
-  /* smooth rendering */
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===============================
-   ✨ TYPOGRAPHY SYSTEM
-================================ */
 h1 {
   font-size: 2.5rem;
   font-weight: 800;
@@ -55,7 +41,9 @@ h3 {
   color: #f1f5f9;
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   font-weight: 600;
   color: #e2e8f0;
 }
@@ -66,22 +54,15 @@ p {
   line-height: 1.7;
 }
 
-/* subtle text */
 .text-muted {
   color: #64748b;
 }
 
-/* ===============================
-   🎯 SELECTION
-================================ */
 ::selection {
   background: rgba(99, 102, 241, 0.25);
   color: #ffffff;
 }
 
-/* ===============================
-   📜 SCROLLBAR (PREMIUM)
-================================ */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -104,31 +85,20 @@ p {
   scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
 }
 
-/* ===============================
-   🧊 GLASS UI
-================================ */
 .glass {
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 1.25rem;
-
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* ===============================
-   🎯 FOCUS STATES
-================================ */
 .focus-ring:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
 }
 
-/* ===============================
-   📏 LINE CLAMP
-================================ */
 .line-clamp-1 {
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -143,12 +113,13 @@ p {
   overflow: hidden;
 }
 
-/* ===============================
-   🌈 GRADIENT TEXT
-================================ */
 @keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
 }
 
 .animate-gradient {
@@ -156,9 +127,6 @@ p {
   animation: gradientFlow 5s linear infinite;
 }
 
-/* ===============================
-   ⚡ MICRO INTERACTIONS
-================================ */
 .smooth-hover {
   transition: all 0.25s ease;
 }
@@ -167,9 +135,6 @@ p {
   transform: translateY(-2px);
 }
 
-/* ===============================
-   ⚡ PERFORMANCE
-================================ */
 .will-change-transform {
   will-change: transform;
 }
