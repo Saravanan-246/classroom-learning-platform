@@ -137,58 +137,96 @@ export default function SubjectDetail() {
           )}
 
           {/* ================= ✅ TOC STRUCTURE ================= */}
-          {subject.id === "toc" && subject.units && (
-            <div className="space-y-4 mt-6">
+        {subject.id === "toc" && subject.units && (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
 
-              {subject.units.map((unit, index) => {
-                const uKey = `${unit.id}-${index}`;
-                const isOpen = openUnits[uKey];
+    {subject.units.map((unit) => (
+      <Link
+        key={unit.id}
+        to={`/learn/${subject.id}/${unit.topics?.[0]?.title
+          ?.toLowerCase()
+          .replace(/[^a-z0-9\s]/g, "")
+          .replace(/\s+/g, "-")}`}
+        className="group block"
+      >
+        <div
+          className="
+            relative overflow-hidden rounded-2xl p-6
+            bg-gradient-to-b from-[#0b1220] to-[#020617]
+            border border-white/10
 
-                return (
-                  <div key={uKey}>
+            transition-all duration-300
+            hover:-translate-y-1.5
+            hover:border-blue-500/40
+            hover:shadow-[0_20px_50px_rgba(0,0,0,0.9)]
+          "
+        >
 
-                    {/* UNIT HEADER */}
-                    <button
-                      onClick={() => toggleUnit(uKey)}
-                      className="w-full flex justify-between items-center px-4 py-4 bg-white/5 rounded-xl hover:bg-blue-500/10 transition"
-                    >
-                      <div>
-                        <h3 className="font-semibold text-blue-300">
-                          {unit.title}
-                        </h3>
-                        <p className="text-xs text-white/50">
-                          {unit.topics?.length} Topics
-                        </p>
-                      </div>
+          {/* Glow */}
+          <div className="
+            absolute inset-0 opacity-0 group-hover:opacity-100
+            transition duration-500
+            bg-gradient-to-br from-blue-500/20 via-transparent to-transparent
+          " />
 
-                      <span className={`transition ${isOpen ? "rotate-90 text-blue-400" : "text-white/60"}`}>
-                        ▶
-                      </span>
-                    </button>
+          {/* Top */}
+          <div className="relative flex items-center justify-between mb-4">
 
-                    {/* TOPICS */}
-                    {isOpen && (
-                      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {unit.topics.map((topic) => (
-                          <TopicCard
-                            key={topic.title}
-                            topic={{
-                              id: topic.title,
-                              title: topic.title,
-                              description: topic.explanation
-                            }}
-                            subjectId={subject.id}
-                          />
-                        ))}
-                      </div>
-                    )}
-
-                  </div>
-                );
-              })}
-
+            <div className="
+              w-12 h-12 flex items-center justify-center
+              rounded-xl
+              bg-blue-500/10 text-blue-400
+              group-hover:bg-blue-600 group-hover:text-white
+              transition-all duration-300
+            ">
+              ▶
             </div>
-          )}
+
+            <span className="
+              text-[11px] px-3 py-1 rounded-full
+              bg-white/5 text-white/70 border border-white/10
+            ">
+              {unit.topics?.length || 0} Topics
+            </span>
+
+          </div>
+
+          {/* Title */}
+          <h3 className="
+            text-lg font-semibold
+            text-blue-400
+            group-hover:text-blue-300
+            transition
+          ">
+            {unit.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-sm text-slate-400 mt-2">
+            Structured concepts and guided learning
+          </p>
+
+          {/* CTA */}
+          <div className="mt-5 flex items-center justify-between text-xs">
+
+            <span className="text-blue-400 group-hover:text-blue-300">
+              Open →
+            </span>
+
+            <span className="
+              w-2 h-2 rounded-full bg-blue-500
+              opacity-60 group-hover:opacity-100
+              group-hover:scale-125 transition
+            " />
+
+          </div>
+
+        </div>
+      </Link>
+    ))}
+
+  </div>
+)}
 
         </div>
       </div>

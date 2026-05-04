@@ -52,17 +52,17 @@ const ListBlock = ({ items }) => (
 /* ---------- MAIN ---------- */
 
 export default function LearnTopics() {
-
   const { subjectId, topicId: rawId } = useParams();
   const topicId = generateSlug(decodeURIComponent(rawId || ""));
   const subjectData = subjectId === "toc" ? tocData : cnData;
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const [openUnits, setOpenUnits] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState(null);
 
-  const dropdownRef = useRef(null); // ✅ NEW
+  const dropdownRef = useRef(null);
 
-  /* ---------- OUTSIDE CLICK CLOSE ---------- */
+  /* ---------- CLOSE DROPDOWN ---------- */
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -74,13 +74,18 @@ export default function LearnTopics() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* ---------- FIND UNIT ---------- */
+  /* ---------- FIND CURRENT UNIT ---------- */
   const currentUnit = subjectData.units.find((u) =>
     u.topics?.some((t) => {
       const id = t.id || generateSlug(t.title);
       return id === topicId;
     })
   );
+
+  /* ---------- SET SELECTED UNIT ---------- */
+  useEffect(() => {
+    if (currentUnit) setSelectedUnit(currentUnit);
+  }, [currentUnit]);
 
   /* ---------- SCROLL ---------- */
   useEffect(() => {
@@ -94,7 +99,7 @@ export default function LearnTopics() {
     return () => window.removeEventListener("scroll", update);
   }, []);
 
-  if (!currentUnit) {
+  if (!selectedUnit) {
     return (
       <div className="h-screen flex items-center justify-center text-slate-500 text-lg">
         Topic not found
@@ -121,7 +126,7 @@ export default function LearnTopics() {
               <ChevronLeft size={18} />
             </Link>
 
-            {/* ✅ FIXED DROPDOWN */}
+            {/* DROPDOWN */}
             <div ref={dropdownRef} className="relative">
 
               <button
@@ -129,7 +134,7 @@ export default function LearnTopics() {
                 className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg text-sm"
               >
                 <Layers size={14} className="text-blue-400" />
-                {currentUnit.title}
+                {selectedUnit.title}
                 <ChevronDown size={14} />
               </button>
 
@@ -140,7 +145,10 @@ export default function LearnTopics() {
                     <Link
                       key={unit.id}
                       to={`/learn/${subjectId}/${generateSlug(unit.topics?.[0]?.title)}`}
-                      onClick={() => setOpenUnits(false)} // ✅ AUTO CLOSE
+                      onClick={() => {
+                        setSelectedUnit(unit);
+                        setOpenUnits(false);
+                      }}
                       className="block px-4 py-2 text-sm hover:bg-white/5"
                     >
                       {unit.title}
@@ -160,7 +168,7 @@ export default function LearnTopics() {
       {/* CONTENT */}
       <main className="max-w-3xl mx-auto px-4 pt-20 pb-16 space-y-16">
 
-        {currentUnit.topics.map((topic) => {
+        {selectedUnit.topics.map((topic) => {
           const id = topic.id || generateSlug(topic.title);
 
           return (
@@ -170,91 +178,70 @@ export default function LearnTopics() {
                 {topic.title}
               </h2>
 
-              {topic.sections?.length ? (
-                topic.sections.map((block, i) => {
-                  const key = `${id}-${i}`;
+              <div className="space-y-5">
 
-                  switch (block.type) {
-                    case "heading":
-                      return <HeadingBlock key={key} value={block.value} />;
-                    case "text":
-                      return <TextBlock key={key} value={block.value} />;
-                    case "highlight":
-                      return <HighlightBlock key={key} value={block.value} />;
-                    case "list":
-                      return <ListBlock key={key} items={block.items} />;
-                    default:
-                      return null;
-                  }
-                })
-              ) : (
+                {topic.explanation && (
+                  <p className="text-slate-300 leading-7">
+                    {topic.explanation}
+                  </p>
+                )}
 
-                <div className="space-y-5">
-
-                  {topic.explanation && (
-                    <p className="text-slate-300 leading-7">
-                      {topic.explanation}
+                {topic.example && (
+                  <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-lg">
+                    <p className="text-green-300 text-sm font-semibold mb-2">
+                      Example
                     </p>
-                  )}
 
-                  {topic.example && (
-                    <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-lg">
-                      <p className="text-green-300 text-sm font-semibold mb-2">
-                        Example
-                      </p>
+                    {typeof topic.example === "string" ? (
+                      <p className="text-slate-200">{topic.example}</p>
+                    ) : (
+                      <div className="space-y-1">
+                        {topic.example.good && (
+                          <p className="text-green-300">✔ {topic.example.good}</p>
+                        )}
+                        {topic.example.bad && (
+                          <p className="text-red-300">✘ {topic.example.bad}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
 
-                      {typeof topic.example === "string" ? (
-                        <p className="text-slate-200">{topic.example}</p>
-                      ) : (
-                        <div className="space-y-1">
-                          {topic.example.good && (
-                            <p className="text-green-300">✔ {topic.example.good}</p>
-                          )}
-                          {topic.example.bad && (
-                            <p className="text-red-300">✘ {topic.example.bad}</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                {topic.tips && (
+                  <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg">
+                    <p className="text-yellow-300 text-sm font-semibold mb-2">
+                      Tip
+                    </p>
 
-                  {topic.tips && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg">
-                      <p className="text-yellow-300 text-sm font-semibold mb-2">
-                        Tip
-                      </p>
-
-                      {typeof topic.tips === "string" ? (
-                        <p className="text-slate-200">{topic.tips}</p>
-                      ) : (
-                        <ul className="space-y-1">
-                          {Object.values(topic.tips).map((tip, i) => (
-                            <li key={i} className="text-slate-200">• {tip}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  )}
-
-                  {topic.importantQuestions && (
-                    <div>
-                      <p className="text-blue-400 font-semibold mb-2">
-                        Important Questions
-                      </p>
-
-                      <ul className="space-y-2">
-                        {topic.importantQuestions.map((q, i) => (
-                          <li key={i} className="text-slate-300 flex gap-2">
-                            <span className="text-blue-500">•</span> {q}
-                          </li>
+                    {typeof topic.tips === "string" ? (
+                      <p className="text-slate-200">{topic.tips}</p>
+                    ) : (
+                      <ul className="space-y-1">
+                        {Object.values(topic.tips).map((tip, i) => (
+                          <li key={i} className="text-slate-200">• {tip}</li>
                         ))}
                       </ul>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                )}
 
-                </div>
+                {topic.importantQuestions && (
+                  <div>
+                    <p className="text-blue-400 font-semibold mb-2">
+                      Important Questions
+                    </p>
 
-              )}
+                    <ul className="space-y-2">
+                      {topic.importantQuestions.map((q, i) => (
+                        <li key={i} className="text-slate-300 flex gap-2">
+                          <span className="text-blue-500">•</span> {q}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+              </div>
 
             </section>
           );

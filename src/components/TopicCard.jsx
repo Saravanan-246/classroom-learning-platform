@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
 
-/* ---------- GLOBAL SLUG HELPER (VERY IMPORTANT) ---------- */
+/* ---------- GLOBAL SLUG HELPER ---------- */
 const generateSlug = (text = "") =>
   text
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, "") // remove commas, symbols
-    .replace(/\s+/g, "-");        // spaces → dash
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-");
 
 export default function TopicCard({ topic, subjectId }) {
   const resourcesCount = topic?.resources?.length ?? 0;
 
-  /* ---------- SAFE ID ---------- */
-  const topicId = topic?.id || generateSlug(topic?.title);
+  /* ---------- ALWAYS NORMALIZE ID (FIX 🔥) ---------- */
+  const topicId = generateSlug(topic?.id || topic?.title);
 
   if (!topicId) return null;
 
