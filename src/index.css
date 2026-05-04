@@ -2,38 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ================================
-   🌍 BASE (CLEAN + SMOOTH)
+/* ===============================
+   🌐 FONT IMPORT (PRO LEVEL)
+================================ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* ===============================
+   🌍 BASE
 ================================ */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   background: #020617;
-  color: #f8fafc;
+  color: #e2e8f0;
 
-  /* 🔥 PERFORMANCE BOOST */
   text-rendering: optimizeLegibility;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+
+  /* smooth rendering */
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* ================================
-   🎯 TEXT SELECTION
+/* ===============================
+   ✨ TYPOGRAPHY SYSTEM
+================================ */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f8fafc;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #f8fafc;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #f1f5f9;
+}
+
+h4, h5, h6 {
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+p {
+  font-size: 15px;
+  color: #94a3b8;
+  line-height: 1.7;
+}
+
+/* subtle text */
+.text-muted {
+  color: #64748b;
+}
+
+/* ===============================
+   🎯 SELECTION
 ================================ */
 ::selection {
   background: rgba(99, 102, 241, 0.25);
-  color: #fff;
+  color: #ffffff;
 }
 
-/* ================================
+/* ===============================
    📜 SCROLLBAR (PREMIUM)
 ================================ */
-
-/* Chrome / Edge / Safari */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -45,39 +93,42 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgba(100, 116, 139, 0.35);
   border-radius: 999px;
-  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(99, 102, 241, 0.6);
 }
 
-/* Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
 }
 
-/* ================================
-   ✨ UTILITIES
+/* ===============================
+   🧊 GLASS UI
 ================================ */
-
-/* Glass */
 .glass {
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* Focus ring */
+/* ===============================
+   🎯 FOCUS STATES
+================================ */
 .focus-ring:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
 }
 
-/* Clamp */
+/* ===============================
+   📏 LINE CLAMP
+================================ */
 .line-clamp-1 {
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -92,31 +143,8 @@ body {
   overflow: hidden;
 }
 
-/* ================================
-   ❄️ SNOW (GLOBAL ANIMATION)
-================================ */
-@keyframes snowWind {
-  0% {
-    transform: translateX(0) translateY(0);
-    opacity: 0;
-  }
-
-  10% {
-    opacity: 1;
-  }
-
-  50% {
-    transform: translateX(50vw) translateY(10vh);
-  }
-
-  100% {
-    transform: translateX(120vw) translateY(25vh);
-    opacity: 0;
-  }
-}
-
-/* ================================
-   🌈 GRADIENT TEXT FLOW
+/* ===============================
+   🌈 GRADIENT TEXT
 ================================ */
 @keyframes gradientFlow {
   0% { background-position: 0% 50%; }
@@ -125,19 +153,27 @@ body {
 
 .animate-gradient {
   background-size: 200% auto;
-  animation: gradientFlow 4s linear infinite;
+  animation: gradientFlow 5s linear infinite;
 }
 
-/* ================================
-   ⚡ PERFORMANCE HELPERS
+/* ===============================
+   ⚡ MICRO INTERACTIONS
 ================================ */
+.smooth-hover {
+  transition: all 0.25s ease;
+}
 
-/* Smooth GPU animations */
+.smooth-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* ===============================
+   ⚡ PERFORMANCE
+================================ */
 .will-change-transform {
   will-change: transform;
 }
 
-/* Prevent lag on heavy animations */
 .no-lag {
   transform: translateZ(0);
   backface-visibility: hidden;

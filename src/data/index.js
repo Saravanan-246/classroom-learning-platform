@@ -1,9 +1,7 @@
-import { english } from "./english";
-import cn from "./cn";
-import or from "./or"; // ✅ add
+import toc from "./toc";
+import or from "./or";
 
 export const subjectsData = [
-  english,
-  cn,
-  or // ✅ add here
+  toc,
+  or
 ];

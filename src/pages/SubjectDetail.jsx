@@ -11,7 +11,7 @@ export default function SubjectDetail() {
 
   const [openGroups, setOpenGroups] = useState({});
   const [openSubs, setOpenSubs] = useState({});
-  const [openUnits, setOpenUnits] = useState({});
+  const [openUnits, setOpenUnits] = useState({}); // ✅ used for TOC
 
   if (!subject) return <Navigate to="/" replace />;
 
@@ -41,7 +41,6 @@ export default function SubjectDetail() {
 
         <div className="absolute inset-0 bg-black/20 md:bg-black/30"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent"></div>
-
         <div className="absolute bottom-0 w-full h-28 bg-gradient-to-b from-transparent to-[#020617]"></div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-5 pt-6 md:pt-14">
@@ -50,12 +49,13 @@ export default function SubjectDetail() {
             ← Back
           </Link>
 
+          {/* ✅ FIXED TITLE */}
           <h1 className="mt-4 text-3xl md:text-5xl font-bold text-blue-400">
-            {subject.name}
+            {subject.title || subject.name}
           </h1>
 
           <p className="mt-2 text-white/80 max-w-md">
-            {subject.desc || subject.description}
+            {subject.description || subject.desc}
           </p>
 
         </div>
@@ -66,25 +66,13 @@ export default function SubjectDetail() {
 
         <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-5 md:p-6 border border-white/10">
 
-          {/* 🔥 OLD STRUCTURE */}
+          {/* ================= OLD STRUCTURE ================= */}
           {subject.sections && subject.sections.map((section) => (
             <div key={section.id} className="mb-10">
 
-              {/* 🔥 PROFESSIONAL HEADING */}
               <h2 className="flex items-center gap-3 mb-6 text-lg md:text-xl font-semibold text-white">
-
-                {/* BLUE BAR */}
-                <span className="
-                  w-[3px] h-6 rounded-full
-                  bg-blue-500
-                  shadow-[0_0_10px_rgba(59,130,246,0.8)]
-                "></span>
-
-                {/* TITLE */}
-                <span className="tracking-wide">
-                  {section.title}
-                </span>
-
+                <span className="w-[3px] h-6 rounded-full bg-blue-500"></span>
+                {section.title}
               </h2>
 
               {section.groups.map((group, gIndex) => {
@@ -96,16 +84,9 @@ export default function SubjectDetail() {
 
                     <button
                       onClick={() => toggleGroup(gKey)}
-                      className="
-                        w-full flex justify-between items-center
-                        px-4 py-3 bg-white/5 rounded-xl
-                        hover:bg-blue-500/10 transition
-                      "
+                      className="w-full flex justify-between items-center px-4 py-3 bg-white/5 rounded-xl hover:bg-blue-500/10 transition"
                     >
-                      <span className="text-white font-medium">
-                        {group.title}
-                      </span>
-
+                      <span>{group.title}</span>
                       <span className={`transition ${isOpen ? "rotate-90 text-blue-400" : "text-white/60"}`}>
                         ▶
                       </span>
@@ -130,7 +111,7 @@ export default function SubjectDetail() {
             </div>
           ))}
 
-          {/* 🔥 CN UNITS */}
+          {/* ================= CN STRUCTURE ================= */}
           {subject.id === "cn" && subject.units && (
             <div className="space-y-4">
 
@@ -140,36 +121,71 @@ export default function SubjectDetail() {
                   to={`/learn/${subject.id}/${unit.topics?.[0]?.id}`}
                   className="block"
                 >
-                  <div className="
-                    bg-white/5 border border-white/10
-                    rounded-xl px-5 py-4
-                    hover:bg-blue-500/10
-                    hover:border-blue-500/40
-                    transition
-                  ">
+                  <div className="bg-white/5 border border-white/10 rounded-xl px-5 py-4 hover:bg-blue-500/10 hover:border-blue-500/40 transition">
 
-                    <div className="flex items-center justify-between">
+                    <h3 className="font-semibold">{unit.title}</h3>
 
-                      <div>
-                        <h3 className="font-semibold text-white">
-                          {unit.title}
-                        </h3>
-
-                        <p className="text-xs text-white/50 mt-1">
-                          {unit.topics?.length || 0} Topics
-                        </p>
-                      </div>
-
-                      <span className="text-white/50">▶</span>
-                    </div>
-
-                    <p className="text-sm text-white/60 mt-2">
-                      Learn all concepts inside this unit
+                    <p className="text-xs text-white/50 mt-1">
+                      {unit.topics?.length || 0} Topics
                     </p>
 
                   </div>
                 </Link>
               ))}
+
+            </div>
+          )}
+
+          {/* ================= ✅ TOC STRUCTURE ================= */}
+          {subject.id === "toc" && subject.units && (
+            <div className="space-y-4 mt-6">
+
+              {subject.units.map((unit, index) => {
+                const uKey = `${unit.id}-${index}`;
+                const isOpen = openUnits[uKey];
+
+                return (
+                  <div key={uKey}>
+
+                    {/* UNIT HEADER */}
+                    <button
+                      onClick={() => toggleUnit(uKey)}
+                      className="w-full flex justify-between items-center px-4 py-4 bg-white/5 rounded-xl hover:bg-blue-500/10 transition"
+                    >
+                      <div>
+                        <h3 className="font-semibold text-blue-300">
+                          {unit.title}
+                        </h3>
+                        <p className="text-xs text-white/50">
+                          {unit.topics?.length} Topics
+                        </p>
+                      </div>
+
+                      <span className={`transition ${isOpen ? "rotate-90 text-blue-400" : "text-white/60"}`}>
+                        ▶
+                      </span>
+                    </button>
+
+                    {/* TOPICS */}
+                    {isOpen && (
+                      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {unit.topics.map((topic) => (
+                          <TopicCard
+                            key={topic.title}
+                            topic={{
+                              id: topic.title,
+                              title: topic.title,
+                              description: topic.explanation
+                            }}
+                            subjectId={subject.id}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                  </div>
+                );
+              })}
 
             </div>
           )}

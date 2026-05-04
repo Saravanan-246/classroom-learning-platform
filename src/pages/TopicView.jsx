@@ -3,12 +3,18 @@ import { subjectsData } from "../data";
 import VideoPlayer from "../components/VideoPlayer";
 import {
   ChevronLeft,
-  ChevronDown,
-  ExternalLink,
   BookOpen,
   PlayCircle,
 } from "lucide-react";
 import { useState } from "react";
+
+/* ---------- SLUG HELPER (CRITICAL FIX) ---------- */
+const generateSlug = (text = "") =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")   // remove commas/symbols
+    .replace(/\s+/g, "-");
 
 export default function TopicView() {
   const { id } = useParams();
@@ -17,8 +23,10 @@ export default function TopicView() {
   let topic = null;
   let subject = null;
 
-  // SEARCH LOGIC
+  /* ---------- SEARCH LOGIC (FIXED) ---------- */
   subjectsData.forEach((s) => {
+
+    // OLD STRUCTURE
     s.sections?.forEach((sec) => {
       sec.groups?.forEach((g) => {
         g.topics?.forEach((t) => {
@@ -29,6 +37,26 @@ export default function TopicView() {
         });
       });
     });
+
+    // ✅ TOC STRUCTURE (FIXED)
+    if (s.id === "toc") {
+      s.units?.forEach((unit) => {
+        unit.topics?.forEach((t) => {
+          const safeId = generateSlug(t.title);
+
+          if (safeId === id) {
+            topic = {
+              id: safeId,
+              title: t.title,
+              description: t.explanation,
+              full: t
+            };
+            subject = s;
+          }
+        });
+      });
+    }
+
   });
 
   if (!topic || !subject) return <Navigate to="/" replace />;
@@ -37,114 +65,138 @@ export default function TopicView() {
   const isGPT = resources.some((r) => r.type === "link");
   const gptLink = resources.find((r) => r.type === "link")?.url;
 
-  // PLAYLIST (SAFE STATIC)
+  const isTOC = subject.id === "toc";
+
   const playlistUrl =
     "https://youtube.com/playlist?list=PL5OU27lGzKQAg_NfT_4V7MG6NE6A4KfVO";
 
-  // ✅ FIXED THUMBNAIL (use known first video id)
   const playlistThumbnail =
     "https://img.youtube.com/vi/teukpjpE9sA/maxresdefault.jpg";
 
-return (
-  <div className="min-h-screen bg-[#020617] text-white">
+  return (
+    <div className="min-h-screen bg-[#020617] text-white">
 
-    {/* HEADER */}
-    <div className="sticky top-0 z-50 backdrop-blur-xl bg-[#020617]/80 border-b border-white/5">
-      <div className="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+      {/* HEADER */}
+      <div className="sticky top-0 z-50 backdrop-blur-xl bg-[#020617]/80 border-b border-white/5">
+        <div className="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
 
-        <div className="flex items-center gap-4">
-          <Link
-            to={`/subject/${subject.id}`}
-            className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
-          >
-            <ChevronLeft size={20} />
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              to={`/subject/${subject.id}`}
+              className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
+            >
+              <ChevronLeft size={20} />
+            </Link>
 
-          <h1 className="text-lg md:text-xl font-bold">
-            {topic.title.split("(")[0]}
-          </h1>
+            <h1 className="text-lg md:text-xl font-bold">
+              {topic.title}
+            </h1>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+            <PlayCircle size={14} className="text-indigo-400" />
+            <span className="text-xs text-white/70">
+              {isTOC ? "Concept" : isGPT ? "Reading Mode" : "Video"}
+            </span>
+          </div>
+
         </div>
+      </div>
 
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
-          <PlayCircle size={14} className="text-indigo-400" />
-          <span className="text-xs text-white/70">
-            {isGPT ? "Reading Mode" : "Video"}
-          </span>
-        </div>
+      {/* MAIN */}
+      <div className="max-w-6xl mx-auto px-5 py-10">
+
+        {/* TOC MODE */}
+        {isTOC && (
+          <div className="max-w-3xl mx-auto space-y-6">
+
+            <div className="p-6 bg-[#03081a] border border-white/10 rounded-2xl">
+              <h2 className="text-xl font-bold text-blue-400 mb-3">
+                Explanation
+              </h2>
+
+              <p className="text-sm text-white/80 leading-relaxed">
+                {topic.description || "No explanation available"}
+              </p>
+            </div>
+
+            <div className="p-6 bg-[#03081a] border border-white/10 rounded-2xl">
+              <h3 className="text-lg font-semibold mb-2">Quick Tip</h3>
+              <p className="text-sm text-white/70">
+                Focus on understanding concept step-by-step for better retention.
+              </p>
+            </div>
+
+          </div>
+        )}
+
+        {/* GPT MODE */}
+        {!isTOC && isGPT && (
+          <div className="text-center p-12 bg-[#03081a] border border-white/10 rounded-2xl">
+            <BookOpen className="mx-auto mb-4 text-indigo-400" size={40} />
+            <h2 className="text-xl font-bold mb-4">Study Material</h2>
+            <a
+              href={gptLink}
+              target="_blank"
+              className="px-6 py-3 bg-indigo-600 rounded-xl"
+            >
+              Open Notes
+            </a>
+          </div>
+        )}
+
+        {/* VIDEO / OR */}
+        {!isTOC && !isGPT && (
+          <div className={`grid grid-cols-1 ${subject.id === "or" ? "justify-items-center" : "lg:grid-cols-2"} gap-8`}>
+
+            {subject.id !== "or" && (
+              <div className="lg:col-span-2 space-y-6">
+                {resources.map((res) => (
+                  <VideoPlayer key={res.id} resource={res} />
+                ))}
+              </div>
+            )}
+
+            {subject.id === "or" && (
+              <div className="w-full max-w-md mx-auto">
+                <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#03081a] shadow-lg">
+
+                  <a href={playlistUrl} target="_blank" className="block relative group">
+                    <img
+                      src={playlistThumbnail}
+                      alt="Playlist"
+                      className="w-full h-44 object-cover"
+                    />
+
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition">
+                      <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white text-xl">
+                        ▶
+                      </div>
+                    </div>
+                  </a>
+
+                  <div className="p-5">
+                    <h3 className="text-lg font-bold mb-3">
+                      Operations Research Playlist
+                    </h3>
+
+                    <a
+                      href={playlistUrl}
+                      target="_blank"
+                      className="block w-full text-center px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold"
+                    >
+                      Open Playlist
+                    </a>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+          </div>
+        )}
 
       </div>
     </div>
-
-    {/* MAIN */}
-    <div className="max-w-6xl mx-auto px-5 py-10">
-
-      {isGPT ? (
-        <div className="text-center p-12 bg-[#03081a] border border-white/10 rounded-2xl">
-          <BookOpen className="mx-auto mb-4 text-indigo-400" size={40} />
-          <h2 className="text-xl font-bold mb-4">Study Material</h2>
-          <a
-            href={gptLink}
-            target="_blank"
-            className="px-6 py-3 bg-indigo-600 rounded-xl"
-          >
-            Open Notes
-          </a>
-        </div>
-      ) : (
-        <div className={`grid grid-cols-1 ${subject.id === "or" ? "justify-items-center" : "lg:grid-cols-2"} gap-8`}>
-
-          {/* VIDEO (NOT OR) */}
-          {subject.id !== "or" && (
-            <div className="lg:col-span-2 space-y-6">
-              {resources.map((res) => (
-                <VideoPlayer key={res.id} resource={res} />
-              ))}
-            </div>
-          )}
-
-          {/* PLAYLIST (ONLY OR) */}
-          {subject.id === "or" && (
-            <div className="w-full max-w-md mx-auto">
-              <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#03081a] shadow-lg">
-
-                {/* Thumbnail */}
-                <a href={playlistUrl} target="_blank" className="block relative group">
-                  <img
-                    src={playlistThumbnail}
-                    alt="Playlist"
-                    className="w-full h-44 object-cover"
-                  />
-
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition">
-                    <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white text-xl">
-                      ▶
-                    </div>
-                  </div>
-                </a>
-
-                {/* Content */}
-                <div className="p-5">
-                  <h3 className="text-lg font-bold mb-3">
-                    Operations Research Playlist
-                  </h3>
-
-                  <a
-                    href={playlistUrl}
-                    target="_blank"
-                    className="block w-full text-center px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold"
-                  >
-                    Open Playlist
-                  </a>
-                </div>
-
-              </div>
-            </div>
-          )}
-
-        </div>
-      )}
-
-    </div>
-  </div>
-);
+  );
 }

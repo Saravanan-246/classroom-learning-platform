@@ -6,7 +6,7 @@ export default function SubjectCard({ subject }) {
   let topicCount = 0;
   let notesCount = 0;
 
-  // 🔥 OLD STRUCTURE
+  /* ---------- OLD STRUCTURE ---------- */
   if (subject?.sections) {
     subject.sections.forEach((section) => {
       section.groups?.forEach((group) => {
@@ -29,12 +29,21 @@ export default function SubjectCard({ subject }) {
     });
   }
 
-  // 🔥 NEW STRUCTURE
+  /* ---------- NEW STRUCTURE (TOC) ---------- */
   if (subject?.units) {
     subject.units.forEach((unit) => {
       unit?.topics?.forEach(() => topicCount++);
     });
   }
+
+  /* ---------- SAFE DATA ---------- */
+  const title =
+    subject?.title || subject?.name || "Untitled Subject";
+
+  const description =
+    subject?.description ||
+    subject?.desc ||
+    "Explore topics and resources";
 
   return (
     <div
@@ -49,18 +58,18 @@ export default function SubjectCard({ subject }) {
         transition-all duration-300
         hover:-translate-y-2
         hover:border-blue-500/40
-        hover:shadow-[0_25px_60px_rgba(0,0,0,0.9)]
+        hover:shadow-[0_30px_80px_rgba(0,0,0,0.9)]
       "
     >
 
-      {/* 🔥 SOFT GLOW */}
+      {/* 🔥 HOVER GLOW */}
       <div className="
         absolute inset-0 opacity-0 group-hover:opacity-100
         transition duration-500
         bg-gradient-to-br from-blue-500/20 via-transparent to-transparent
       " />
 
-      {/* 🔥 TOP */}
+      {/* 🔝 TOP */}
       <div className="relative flex items-start justify-between mb-6">
 
         {/* ICON */}
@@ -73,17 +82,10 @@ export default function SubjectCard({ subject }) {
 
           transition-all duration-300
         ">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor">
-            <path
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 6v6l4 2"
-            />
-          </svg>
+          <span className="text-xl">📘</span>
         </div>
 
-        {/* COUNTS */}
+        {/* BADGES */}
         <div className="flex flex-col items-end gap-2 text-[11px]">
 
           {topicCount > 0 && (
@@ -108,7 +110,6 @@ export default function SubjectCard({ subject }) {
           )}
 
         </div>
-
       </div>
 
       {/* 🔥 TITLE */}
@@ -118,7 +119,7 @@ export default function SubjectCard({ subject }) {
         group-hover:text-blue-300
         transition leading-snug
       ">
-        {subject?.name || "Untitled Subject"}
+        {title}
       </h3>
 
       {/* 🔥 DESCRIPTION */}
@@ -127,7 +128,7 @@ export default function SubjectCard({ subject }) {
         mt-2 leading-relaxed
         line-clamp-2
       ">
-        {subject?.desc || subject?.description || "Explore topics and resources"}
+        {description}
       </p>
 
       {/* 🔥 CTA */}
@@ -140,7 +141,7 @@ export default function SubjectCard({ subject }) {
           Explore →
         </span>
 
-        {/* 🔥 ACTIVE DOT */}
+        {/* DOT */}
         <span className="
           h-2 w-2 rounded-full bg-blue-500
           opacity-60 group-hover:opacity-100
