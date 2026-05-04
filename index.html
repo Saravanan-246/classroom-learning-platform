@@ -18,23 +18,72 @@
       content="Structured learning platform to master subjects with clarity, topics, and guided content."
     />
 
-    <!-- Fonts (Professional UI) -->
+    <!-- Fonts (Premium UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
     <!-- Title -->
     <title>Classroom • Learn Smart</title>
 
-    <!-- Prevent flash -->
+    <!-- Smooth Load + Base UI -->
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         margin: 0;
         background: #020617;
         font-family: "Inter", system-ui, -apple-system, sans-serif;
+        color: #e2e8f0;
+
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        text-rendering: optimizeLegibility;
+      }
+
+      /* Prevent layout shift */
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Selection */
+      ::selection {
+        background: rgba(59, 130, 246, 0.25);
+        color: #ffffff;
+      }
+
+      /* Scrollbar (clean minimal) */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(100, 116, 139, 0.35);
+        border-radius: 999px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(59, 130, 246, 0.6);
+      }
+
+      /* Initial fade-in (premium feel) */
+      body {
+        opacity: 0;
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
       }
     </style>
   </head>
